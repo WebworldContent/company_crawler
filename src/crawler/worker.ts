@@ -95,7 +95,8 @@ const extractAllData = async (
       const { url } = data;
       const response = await fetchHtml(`${host}${url}`);
       const eachPageData = extractEachPage(response);
-      companiesDetails.push(eachPageData);
+      console.log(eachPageData);
+      companiesDetails.push(eachPageData); // this is where i can push data continuosly to DB
     } catch (error) {
       throw new Error(`Error while fetching page data: ${error}`);
     }

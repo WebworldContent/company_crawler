@@ -60,6 +60,7 @@ const extractAllData = async (html) => {
     return siteDetails.host;
 };
 const runWorker = (workerData) => {
+    // console.log(workerData);
     return new Promise((resolve, reject) => {
         const worker = new worker_threads_1.Worker('./dist/crawler/worker.cjs', { workerData });
         // console.log(worker);

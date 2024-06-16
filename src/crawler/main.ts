@@ -39,7 +39,6 @@ const extractAllData = async (html: string): Promise<string> => {
 const runWorker = (workerData: { html: string; host: string }): Promise<any> => {
   return new Promise((resolve, reject) => {
     const worker = new Worker('./dist/crawler/worker.cjs', { workerData });
-    // console.log(worker);
     worker.on('message', (msg) => {
       console.log('Worker message received:', msg);
       resolve(msg)
