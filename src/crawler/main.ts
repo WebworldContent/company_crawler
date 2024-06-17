@@ -61,7 +61,7 @@ const runWorker = (workerData: { html: string; host: string }): Promise<any> => 
 export const crawler = async () => {
   try {
     console.log('Starting crawler');
-    const url = `https://bit.ly/3lmNMTA`;
+    const url = `https://www.companydetails.in/state/uttar-pradesh`;
     const response = await fetchHtml(url);
     console.log('Fetched main page');
     const host = await extractAllData(response);
@@ -70,5 +70,6 @@ export const crawler = async () => {
     console.log('Final result:', result);
   } catch (error) {
     console.error(`Error: ${error}`);
+    throw error;
   }
 };

@@ -1,8 +1,9 @@
 import { parentPort, workerData } from "worker_threads";
 import axios from "axios";
 import * as cheerio from "cheerio";
+import { addCompanies } from "../services/companies";
 
-type CompanyDetails = {
+export type CompanyDetails = {
   companyName: string;
   cin: string;
   pin: string;
@@ -90,17 +91,37 @@ const extractAllData = async (
     });
   }
 
-  for (const data of companies) {
-    try {
-      const { url } = data;
-      const response = await fetchHtml(`${host}${url}`);
-      const eachPageData = extractEachPage(response);
-      console.log(eachPageData);
-      companiesDetails.push(eachPageData); // this is where i can push data continuosly to DB
-    } catch (error) {
-      throw new Error(`Error while fetching page data: ${error}`);
+  // Limit the number of concurrency fetch limit
+  const concurrencyLimit = 10;
+  let activeFetches = 0;
+
+  // Using a Promise queue to manage concurrency
+  const queue = companies.slice();
+
+  const worker = async () => {
+    while (queue.length > 0) {
+      if (activeFetches < concurrencyLimit) {
+        activeFetches++;
+        const company = queue.shift();
+        if (company && company.url) {
+          const { url } = company;
+          try {
+            const response = await fetchHtml(`${host}${url}`);
+            const eachPageData = extractEachPage(response);
+            await addCompanies(eachPageData);
+            companiesDetails.push(eachPageData);
+          } catch (error) {
+            console.error(`Error fetching and adding data ${url}:`, error);
+          } finally {
+            activeFetches--;
+          }
+        }
+      }
     }
-  }
+  };
+
+  const workers = Array.from({ length: concurrencyLimit }, worker);
+  await Promise.all(workers);
 
   console.log(companiesDetails);
   return companiesDetails;

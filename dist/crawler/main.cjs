@@ -60,10 +60,8 @@ const extractAllData = async (html) => {
     return siteDetails.host;
 };
 const runWorker = (workerData) => {
-    // console.log(workerData);
     return new Promise((resolve, reject) => {
         const worker = new worker_threads_1.Worker('./dist/crawler/worker.cjs', { workerData });
-        // console.log(worker);
         worker.on('message', (msg) => {
             console.log('Worker message received:', msg);
             resolve(msg);
@@ -86,7 +84,7 @@ const runWorker = (workerData) => {
 const crawler = async () => {
     try {
         console.log('Starting crawler');
-        const url = `https://bit.ly/3lmNMTA`;
+        const url = `https://www.companydetails.in/state/uttar-pradesh`;
         const response = await fetchHtml(url);
         console.log('Fetched main page');
         const host = await extractAllData(response);
@@ -96,6 +94,7 @@ const crawler = async () => {
     }
     catch (error) {
         console.error(`Error: ${error}`);
+        throw error;
     }
 };
 exports.crawler = crawler;

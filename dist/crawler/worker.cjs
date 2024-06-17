@@ -29,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const worker_threads_1 = require("worker_threads");
 const axios_1 = __importDefault(require("axios"));
 const cheerio = __importStar(require("cheerio"));
+const companies_1 = require("../services/companies");
 const fetchHtml = async (url) => {
     try {
         const { data } = await axios_1.default.get(url);
@@ -86,18 +87,48 @@ const extractAllData = async (html, host) => {
             });
         });
     }
-    for (const data of companies) {
-        try {
-            const { url } = data;
-            const response = await fetchHtml(`${host}${url}`);
-            const eachPageData = extractEachPage(response);
-            console.log(eachPageData);
-            companiesDetails.push(eachPageData); // this is where i can push data continuosly to DB
+    // Limit the number of concurrency fetch limit
+    const concurrencyLimit = 10;
+    let activeFetches = 0;
+    // Using a Promise queue to manage concurrency
+    const queue = companies.slice();
+    const worker = async () => {
+        while (queue.length > 0) {
+            if (activeFetches < concurrencyLimit) {
+                activeFetches++;
+                const company = queue.shift();
+                if (company && company.url) {
+                    const { url } = company;
+                    try {
+                        const response = await fetchHtml(`${host}${url}`);
+                        const eachPageData = extractEachPage(response);
+                        await (0, companies_1.addCompanies)(eachPageData);
+                        companiesDetails.push(eachPageData);
+                    }
+                    catch (error) {
+                        console.error(`Error fetching and adding data ${url}:`, error);
+                    }
+                    finally {
+                        activeFetches--;
+                    }
+                }
+            }
         }
-        catch (error) {
-            throw new Error(`Error while fetching page data: ${error}`);
-        }
-    }
+    };
+    // Start workers
+    const workers = Array.from({ length: concurrencyLimit }, worker);
+    await Promise.all(workers);
+    // for (const data of companies) {
+    //   try {
+    //     const { url } = data;
+    //     const response = await fetchHtml(`${host}${url}`);
+    //     const eachPageData = extractEachPage(response);
+    //     console.log(`${host}${url}`, eachPageData);
+    //     companiesDetails.push(eachPageData); // this is where i can push data continuosly to DB
+    //   } catch (error) {
+    //     throw new Error(`Error while fetching page data: ${error}`);
+    //   }
+    // }
     console.log(companiesDetails);
     return companiesDetails;
 };
