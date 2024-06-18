@@ -2,7 +2,7 @@ import { QueryResult } from "mysql2";
 import conn from "../config/db";
 import { CompanyDetails } from "../crawler/worker";
 
-export const addCompanies = async (data: CompanyDetails): Promise<void> => {
+export const addData = async (data: CompanyDetails): Promise<void> => {
   try {
     const { company_name, cin, pin } = data;
     await conn((connection: any) => {
@@ -18,7 +18,7 @@ export const addCompanies = async (data: CompanyDetails): Promise<void> => {
   }
 };
 
-export const getAllCompanies = async (): Promise<QueryResult> => {
+export const getAllData = async (): Promise<QueryResult> => {
   try {
     const response = await conn((connection: any) => {
       if (connection) {
@@ -35,12 +35,12 @@ export const getAllCompanies = async (): Promise<QueryResult> => {
     const [rows] = response;
     return rows;
   } catch (err) {
-    console.log("Error fetching data", err);
+    console.log("Error fetching all data", err);
     throw err;
   }
 };
 
-export const getACompany = async (id: string): Promise<QueryResult> => {
+export const getSingleData = async (id: string): Promise<QueryResult> => {
   try {
     const response = await conn((connection: any) => {
       if (connection) {
@@ -57,12 +57,12 @@ export const getACompany = async (id: string): Promise<QueryResult> => {
     const [rows] = response;
     return rows;
   } catch (err) {
-    console.log("Error fetching data", err);
+    console.log("Error fetching single data", err);
     throw err;
   }
 };
 
-export const DeleteACompany = async (id: string): Promise<void> => {
+export const deleteData = async (id: string): Promise<void> => {
   try {
     await conn((connection: any) => {
       if (connection) {
@@ -74,6 +74,23 @@ export const DeleteACompany = async (id: string): Promise<void> => {
 
   } catch (err) {
     console.log("Error fetching data", err);
+    throw err;
+  }
+};
+
+export const updateData = async (data: CompanyDetails, id: string): Promise<void> => {
+  try {
+    const {company_name, cin, pin} = data;
+    await conn((connection: any) => {
+      if (connection) {
+        return connection?.execute(
+          `update companies set company_name='${company_name}', cin='${cin}', pin='${pin}' where id = ${id}`
+        );
+      }
+    });
+
+  } catch (err) {
+    console.log("Error updating data", err);
     throw err;
   }
 };

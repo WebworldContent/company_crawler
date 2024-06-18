@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const company_1 = require("../controller/company");
+const clientRoute = (0, express_1.Router)();
+clientRoute.get('/clients', company_1.fetchCompanies);
+clientRoute.get('/clients/:id', company_1.fetchACompany);
+clientRoute.post('/clients', company_1.addCompany);
+clientRoute.put('/client/:id', company_1.updateCompany);
+clientRoute.delete('/client/:id', company_1.deleteCompany);
+exports.default = clientRoute;

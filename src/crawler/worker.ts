@@ -1,7 +1,7 @@
 import { parentPort, workerData } from "worker_threads";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { addCompanies } from "../models/companies";
+import { addData } from "../models/companies";
 
 export type CompanyDetails = {
   company_name: string;
@@ -109,7 +109,7 @@ const extractAllData = async (
             const response = await fetchHtml(`${host}${url}`);
             const eachPageData = extractEachPage(response);
             console.log(eachPageData);
-            await addCompanies(eachPageData);
+            await addData(eachPageData);
             companiesDetails.push(eachPageData);
           } catch (error) {
             console.error(`Error fetching and adding data ${url}:`, error);
