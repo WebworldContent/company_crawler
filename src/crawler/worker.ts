@@ -1,10 +1,10 @@
 import { parentPort, workerData } from "worker_threads";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { addCompanies } from "../services/companies";
+import { addCompanies } from "../models/companies";
 
 export type CompanyDetails = {
-  companyName: string;
+  company_name: string;
   cin: string;
   pin: string;
 };
@@ -43,7 +43,7 @@ const extractTextFromColumns = (
 
 const extractEachPage = (html: string) => {
   const $ = cheerio.load(html);
-  const companyDetails: CompanyDetails = { companyName: "", cin: "", pin: "" };
+  const companyDetails: CompanyDetails = { company_name: "", cin: "", pin: "" };
   const basicDetails = $("#basicdetails").html();
   const contactDetails = $("#CONTACT-DETAILS").html();
 
@@ -55,7 +55,7 @@ const extractEachPage = (html: string) => {
       ".col-xl-3",
       ".col-xl-9"
     );
-    companyDetails.companyName = rightContent[0].trim();
+    companyDetails.company_name = rightContent[0].trim();
     companyDetails.cin = rightContent[4].trim();
   }
 
@@ -79,13 +79,13 @@ const extractAllData = async (
 ): Promise<CompanyDetails[]> => {
   const $ = cheerio.load(html);
   const companiesDetails: CompanyDetails[] = [];
-  const companies: { companyName: string; url: string }[] = [];
+  const companies: { company_name: string; url: string }[] = [];
 
   const mainContent = $("main");
   if (mainContent.length) {
     mainContent.find("a").each((_, element) => {
       companies.push({
-        companyName: $(element).text(),
+        company_name: $(element).text(),
         url: $(element).attr("href") || "",
       });
     });

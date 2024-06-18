@@ -3,17 +3,16 @@ import dbConfig from "./dbConfig";
 
 const pool = mysql.createPool(dbConfig);
 
-type ConnectionObject = mysql.PoolConnection | undefined
-export type MyCallback = (data: ConnectionObject) => void;
+export type ConnectionObject = mysql.PoolConnection | undefined;
+export type MyCallback = (data: ConnectionObject) => Promise<[mysql.QueryResult, mysql.FieldPacket[]]>;
 
-const conn = async (callback: MyCallback) => {
+const conn = async (callback: MyCallback): Promise<[mysql.QueryResult, mysql.FieldPacket[]]> => {
     let connection: ConnectionObject;
     try {
         connection = await pool.getConnection();
         console.log('Connected to MySQL Server DB');
 
-        return callback(connection);
-
+        return await callback(connection);
     } catch (err) {
         console.error('Error executing with MySQL connection: ', err);
         throw err;

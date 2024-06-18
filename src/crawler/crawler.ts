@@ -2,7 +2,7 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 
 type ExtractedData = {
-  companyName: string;
+  company_name: string;
   url: string;
 };
 
@@ -31,7 +31,7 @@ interface PageInformation {
 }
 
 type CompanyDetails = {
-  companyName: string;
+  company_name: string;
   cin: string;
   pin: string;
 };
@@ -72,7 +72,7 @@ const extractTextFromColumns = (
 
 const extractEachPage = (html: any) => {
   const $ = cheerio.load(html);
-  const companyDetails: CompanyDetails = { companyName: "", cin: "", pin: "" };
+  const companyDetails: CompanyDetails = { company_name: "", cin: "", pin: "" };
   const basicDetails = $("#basicdetails").html();
   const contactDetails = $("#CONTACT-DETAILS").html();
 
@@ -84,7 +84,7 @@ const extractEachPage = (html: any) => {
       ".col-xl-3",
       ".col-xl-9"
     );
-    companyDetails.companyName = rightContent[0].trim();
+    companyDetails.company_name = rightContent[0].trim();
     companyDetails.cin = rightContent[4].trim();
   }
 
@@ -126,7 +126,7 @@ const extractAllData = async (html: any) => {
   if (mainContent.length) {
     mainContent.find("a").each((_, element) => {
       companies.push({
-        companyName: $(element).text(),
+        company_name: $(element).text(),
         url: $(element).attr("href") || "",
       });
     });
