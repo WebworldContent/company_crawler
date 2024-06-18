@@ -11,8 +11,7 @@ const PORT = process.env.PORT;
 app.use(express.json());
 
 app.get('/', async (req: Request, res: Response, next: NextFunction) => {
-    await crawler();
-    res.send('Hello World');
+    res.send('Welcome Home!!');
 });
 
 app.use(clientRoute);
