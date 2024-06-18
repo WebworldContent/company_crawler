@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const dbConfig = {
     host: "127.0.0.1",
-    user: "root",
+    user: "test",
     password: "password",
     database: "crawler",
     waitForConnections: true,

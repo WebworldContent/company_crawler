@@ -108,6 +108,7 @@ const extractAllData = async (
           try {
             const response = await fetchHtml(`${host}${url}`);
             const eachPageData = extractEachPage(response);
+            console.log(eachPageData);
             await addCompanies(eachPageData);
             companiesDetails.push(eachPageData);
           } catch (error) {

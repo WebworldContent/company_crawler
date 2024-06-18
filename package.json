@@ -1,13 +1,12 @@
 {
   "name": "company_crawler",
-  "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.cjs",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "rimraf dist && tsc && renamer --find .js --replace .cjs 'dist/**'",
-    "start": "node dist/index.cjs",
-    "dev": "nodemon --exec tsx src/index.ts"
+    "build": "rimraf dist && npx tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon --exec tsx dist/index.js"
   },
   "keywords": [],
   "author": "",

@@ -61,7 +61,7 @@ const extractAllData = async (html) => {
 };
 const runWorker = (workerData) => {
     return new Promise((resolve, reject) => {
-        const worker = new worker_threads_1.Worker('./dist/crawler/worker.cjs', { workerData });
+        const worker = new worker_threads_1.Worker('./dist/crawler/worker.js', { workerData });
         worker.on('message', (msg) => {
             console.log('Worker message received:', msg);
             resolve(msg);

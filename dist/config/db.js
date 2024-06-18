@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const promise_js_1 = __importDefault(require("mysql2/promise.js"));
-const dbConfig_js_1 = __importDefault(require("./dbConfig.js"));
-const pool = promise_js_1.default.createPool(dbConfig_js_1.default);
+const promise_1 = __importDefault(require("mysql2/promise"));
+const dbConfig_1 = __importDefault(require("./dbConfig"));
+const pool = promise_1.default.createPool(dbConfig_1.default);
 const conn = async (callback) => {
     let connection;
     try {

@@ -102,6 +102,7 @@ const extractAllData = async (html, host) => {
                     try {
                         const response = await fetchHtml(`${host}${url}`);
                         const eachPageData = extractEachPage(response);
+                        console.log(eachPageData);
                         await (0, companies_1.addCompanies)(eachPageData);
                         companiesDetails.push(eachPageData);
                     }
@@ -115,20 +116,8 @@ const extractAllData = async (html, host) => {
             }
         }
     };
-    // Start workers
     const workers = Array.from({ length: concurrencyLimit }, worker);
     await Promise.all(workers);
-    // for (const data of companies) {
-    //   try {
-    //     const { url } = data;
-    //     const response = await fetchHtml(`${host}${url}`);
-    //     const eachPageData = extractEachPage(response);
-    //     console.log(`${host}${url}`, eachPageData);
-    //     companiesDetails.push(eachPageData); // this is where i can push data continuosly to DB
-    //   } catch (error) {
-    //     throw new Error(`Error while fetching page data: ${error}`);
-    //   }
-    // }
     console.log(companiesDetails);
     return companiesDetails;
 };
