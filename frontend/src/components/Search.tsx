@@ -8,11 +8,11 @@ type SearchType = {
 
 export const SearchBar = ({ setCompanies }: SearchType) => {
   const [query, setQuery] = useState('');
-  const [isempty, setIsEmpty] = useState(false);
+  const [disablebtn, setDisablebtn] = useState(false);
 
   const handleSearch = async () => {
-    if (!query) {
-      setIsEmpty(true);
+    if (!query.trim()) {
+      setDisablebtn(true);
       return;
     }
 
@@ -35,14 +35,18 @@ export const SearchBar = ({ setCompanies }: SearchType) => {
           variant="outlined"
           className="search"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value.trim())
+            setDisablebtn(false);
+          }
+          }
           sx={{ flex: 1 }}
         />
         <Button
           variant="contained"
           color="primary"
           onClick={handleSearch}
-          disabled={isempty}
+          disabled={disablebtn}
         >
           Search
         </Button>
