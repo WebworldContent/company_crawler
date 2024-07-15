@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const company_1 = require("../controller/company");
+const elasticSearch_1 = require("../controller/elasticSearch");
+const clientRoute = (0, express_1.Router)();
+clientRoute.get('/clients', company_1.fetchCompanies);
+clientRoute.get('/clients/:id', company_1.fetchACompany);
+clientRoute.post('/clients', company_1.addCompany);
+clientRoute.put('/client/:id', company_1.updateCompany);
+clientRoute.delete('/client/:id', company_1.deleteCompany);
+clientRoute.get('/search', elasticSearch_1.searchCompanies);
+exports.default = clientRoute;
