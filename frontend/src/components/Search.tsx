@@ -8,12 +8,16 @@ type SearchType = {
 
 export const SearchBar = ({ setCompanies }: SearchType) => {
   const [query, setQuery] = useState('');
+  const [isempty, setIsEmpty] = useState(false);
 
   const handleSearch = async () => {
+    if (!query) {
+      setIsEmpty(true);
+      return;
+    }
+
     const response = await esSearch(query);
     setCompanies(response)
-    // console.log(data);
-    // const searchedCompanies = []
   };
 
   return (
@@ -38,6 +42,7 @@ export const SearchBar = ({ setCompanies }: SearchType) => {
           variant="contained"
           color="primary"
           onClick={handleSearch}
+          disabled={isempty}
         >
           Search
         </Button>
